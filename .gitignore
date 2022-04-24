@@ -1,0 +1,11 @@
+node_modules
+.env
+gcp_env.yaml
+yarn-error.log
+dist
+idea
+vscode
+build
+*.pyc
+.DS_Store
+/yarn.lock

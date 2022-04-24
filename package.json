@@ -1,0 +1,17 @@
+{
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently -n payment-api,finance-api,customer-api,enggajador-api,localStorage,order-api,product-api,supplier-api,user-api --kill-others \"cd payment && yarn dev:server\" \"cd finance && yarn dev:server\" \"cd customer && yarn dev:server\" \"cd enggajador && yarn dev:server\" \"cd localStorage && node server.js\" \"cd order && yarn dev:server\" \"cd product && yarn dev:server\" \"cd supplier && yarn dev:server\" \"cd user && yarn dev:server\"",
+    "run:monolith": "cd monolith && yarn build && yarn start",
+    "run:microservices": "concurrently -n user-api,course-api,certificate-api --kill-others \"cd microservices/users && yarn start\" \"cd microservices/courses && yarn start\" \"cd microservices/certificates && yarn start\"",
+    "deploy:monolith": "cd monolith && yarn deploy",
+    "deploy:user": "cd monolith && yarn deploy",
+    "deploy:course": "cd monolith && yarn deploy",
+    "deploy:certificate": "cd monolith && yarn deploy",
+    "locust:monolith": "cd locust && locust MonolithRunner --host https://monolith-dot-unifor-tcc.rj.r.appspot.com/",
+    "locust:microservices": "cd locust && locust MicroserviceRunner --host https://microservice"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.0"
+  }
+}

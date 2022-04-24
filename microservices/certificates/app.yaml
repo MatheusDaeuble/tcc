@@ -1,0 +1,7 @@
+service: microservice-certificate
+runtime: nodejs14
+instance_class: F1
+automatic_scaling:
+  max_instances: 1
+includes:
+  - gcp_env.yaml
