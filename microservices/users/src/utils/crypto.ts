@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { createHmac } from 'crypto';
 
 export const hashSha256 = (plainText: string): string =>

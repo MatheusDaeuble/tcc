@@ -1,5 +1,5 @@
-/* eslint-disable max-classes-per-file */
 import AppError from '@shared/errors/AppError';
+import { hashPassword } from '@shared/utils/crypto';
 import { instanceToInstance } from 'class-transformer';
 import { Response, Request } from 'express';
 import UsersRepository from '../database/repositories/UsersRepository';
@@ -24,7 +24,7 @@ export default class UserController {
     const user = await usersRepository.create({
       fullName,
       email,
-      password,
+      password: hashPassword(password),
       phone,
       birthDate,
       gender,
@@ -46,8 +46,6 @@ export default class UserController {
   }
 
   public async index(request: Request, response: Response): Promise<Response> {
-    // await stall();
-
     const usersRepository = new UsersRepository();
 
     const users = await usersRepository.filter({});

@@ -4,6 +4,7 @@ import pdf from 'html-pdf';
 import { Response, Request } from 'express';
 import { readFileSync } from 'fs';
 import AppError from '@utils/errors/AppError';
+import { formatDate } from '@utils/format';
 
 const [template, config] = readFileSync('./src/views/certificate.hbs', {
   encoding: 'utf-8',
@@ -11,7 +12,14 @@ const [template, config] = readFileSync('./src/views/certificate.hbs', {
 
 export default class UserController {
   public async create(request: Request, response: Response): Promise<Response> {
-    const { fullName } = request.body;
+    const {
+      fullName,
+      courseName,
+      issuedAt,
+      startDate,
+      endDate,
+      workload,
+    } = request.body;
 
     const parseTemplate = handlebars.compile(template);
 
@@ -19,7 +27,14 @@ export default class UserController {
       new Promise(resolve => {
         pdf
           .create(
-            parseTemplate({ fullName, issuedAt: '25/03/2022' }),
+            parseTemplate({
+              fullName,
+              courseName,
+              workload,
+              issuedAt: formatDate(issuedAt),
+              startDate: formatDate(startDate),
+              endDate: formatDate(endDate),
+            }),
             JSON.parse(config)
           )
           .toBuffer((err, buffer) => {
@@ -29,18 +44,8 @@ export default class UserController {
           });
       });
 
-    // const buffer = await createPDF();
-
     await createPDF();
 
     return response.status(200).json();
-
-    // return response
-    //   .writeHead(200, {
-    //     'Content-Length': Buffer.byteLength(buffer),
-    //     'Content-Type': 'application/pdf',
-    //     'Content-disposition': `attachment;filename=Certificado ${fullName}.pdf`,
-    //   })
-    //   .end(buffer);
   }
 }

@@ -1,4 +1,4 @@
-import Course from '@modules/courses/database/entities/Course';
+import Course from '@database/entities/Course';
 
 type IUpdateCourseDTO = Partial<Course>;
 

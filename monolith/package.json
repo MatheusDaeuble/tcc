@@ -7,13 +7,11 @@
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
     "dev:server": "ts-node-dev -r tsconfig-paths/register --transpile-only --ignore-watch node_modules src/shared/infra/http/server.ts",
     "prod:server": "pm2-runtime dist/shared/infra/http/server.js --name ibpj-api",
-    "start": "NODE_ENV=production node dist/shared/infra/http/server.js --name ibpj-api",
+    "start": "NODE_ENV=production node dist/shared/infra/http/server.js",
     "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "lint": "tsc --noEmit && eslint --ext .js,.ts, src/** --no-error-on-unmatched-pattern",
     "deploy": "gcloud app deploy --quiet",
     "pretty-quick": "pretty-quick",
-    "test": "jest",
-    "doc": "ts-node-dev doc/swagger",
     "gcp-build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files"
   },
   "dependencies": {
@@ -25,9 +23,9 @@
     "fs": "^0.0.1-security",
     "handlebars": "^4.7.7",
     "html-pdf": "^3.0.1",
-    "multer": "^1.4.4",
     "nodemailer": "^6.5.0",
     "pg": "^8.5.1",
+    "qrcode": "^1.5.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.31"
   },
@@ -44,6 +42,7 @@
     "@types/html-pdf": "^3.0.0",
     "@types/multer": "^1.4.7",
     "@types/nodemailer": "^6.4.1",
+    "@types/qrcode": "^1.4.2",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
     "@typescript-eslint/parser": "^4.15.0",
     "babel-plugin-module-resolver": "^4.1.0",

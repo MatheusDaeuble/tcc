@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+import { hashPassword } from '@utils/crypto';
 import AppError from '@utils/errors/AppError';
 import { instanceToInstance } from 'class-transformer';
 import { Response, Request } from 'express';
@@ -24,7 +25,7 @@ export default class UserController {
     const user = await usersRepository.create({
       fullName,
       email,
-      password,
+      password: hashPassword(password),
       phone,
       birthDate,
       gender,

@@ -1,6 +1,5 @@
-import random
-from locust import task, SequentialTaskSet
-from locust.contrib.fasthttp import FastHttpUser
+import random, time
+from locust import task, HttpUser, constant_throughput, between
 from util import get_random_name, get_random_password, get_random_phone, get_random_date, get_random_gender, get_base_email, get_random_course, get_random_workload
 from locust.exception import RescheduleTask
 
@@ -9,12 +8,21 @@ count = 1
 users = []
 courses = []
 
-class MonolithRunner(FastHttpUser):
+class MonolithRunner(HttpUser):
+
+    wait_time = between(15,15.1)
 
     # Certificates:
     @task
     def create_certificate(self):
-        data = { "fullName": get_random_name() }
+        data = { 
+            "fullName": get_random_name(),
+            "courseName": get_random_course(),
+            "issuedAt": get_random_date(),
+            "startDate": get_random_date(),
+            "endDate": get_random_date(),
+            "workload": get_random_workload(),
+        }
         self.client.post('/certificates', json=data)
 
     # Users:
@@ -44,7 +52,6 @@ class MonolithRunner(FastHttpUser):
     def delete_user(self):
         global users
         if (len(users)):
-
             user = users.pop(self.get_random_user_index())
             id = user['id']
             self.client.delete(f'/users/{id}', name='/users/delete')
@@ -53,9 +60,10 @@ class MonolithRunner(FastHttpUser):
     def show_user(self):
         global users
         if (len(users)):
-            user = users[self.get_random_user_index()]
+            user = users.pop(self.get_random_user_index())
             id = user['id']
             self.client.get(f'/users/{id}', name='/users/show')
+            users.append(user)
 
     @task
     def list_user(self):
@@ -67,7 +75,7 @@ class MonolithRunner(FastHttpUser):
         global users
         if (len(users)):
 
-            user = users[self.get_random_user_index()]
+            user = users.pop(self.get_random_user_index())
             id = user['id']
 
             data = {
@@ -78,6 +86,7 @@ class MonolithRunner(FastHttpUser):
             }
 
             self.client.put(f'/users/{id}', name='/users/update', json=data)
+            users.append(user)
 
     @task
     def registration_user(self):
@@ -116,7 +125,7 @@ class MonolithRunner(FastHttpUser):
 
         if('id' in course):
             courses.append(course)
-        
+
     @task
     def delete_course(self):
         global courses
@@ -130,9 +139,10 @@ class MonolithRunner(FastHttpUser):
     def show_course(self):
         global courses
         if (len(courses)):
-            course = courses[self.get_random_course_index()]
+            course = courses.pop(self.get_random_course_index())
             id = course['id']
             self.client.get(f'/courses/{id}', name='/courses/show')
+            courses.append(course)
 
     @task
     def list_course(self):
@@ -144,7 +154,7 @@ class MonolithRunner(FastHttpUser):
         global courses
         if (len(courses)):
 
-            course = courses[self.get_random_course_index()]
+            course = courses.pop(self.get_random_course_index())
             id = course['id']
 
             data = {
@@ -156,6 +166,7 @@ class MonolithRunner(FastHttpUser):
             }
 
             self.client.put(f'/courses/{id}', name='/courses/update', json=data)
+            courses.append(course)
 
     def get_random_user_index(self):
         global users
@@ -178,11 +189,20 @@ class MonolithRunner(FastHttpUser):
 
         return random.randint(0, len(courses) - 1)
 
-class MicroserviceRunner(FastHttpUser):
+class MicroserviceRunner(HttpUser):
+
+    wait_time = between(15,15.1)
 
     @task
     def create_certificate(self):
-        data = { "fullName": get_random_name() }
+        data = { 
+            "fullName": get_random_name(),
+            "courseName": get_random_course(),
+            "issuedAt": get_random_date(),
+            "startDate": get_random_date(),
+            "endDate": get_random_date(),
+            "workload": get_random_workload(),
+        }
         self.client.post('-certificate-dot-unifor-tcc.rj.r.appspot.com', json=data, name='/certificates')
 
     @task

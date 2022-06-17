@@ -1,7 +1,7 @@
 service: microservice-course
 runtime: nodejs14
-instance_class: F1
-automatic_scaling:
-  max_instances: 1
+instance_class: B1
+manual_scaling:
+  instances: 1
 includes:
   - gcp_env.yaml
